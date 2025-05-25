@@ -12,7 +12,7 @@ const db = mysql.createConnection({
   host: 'mysql-2ebaaef9-ecommerce-construction-1.c.aivencloud.com',
   user: 'avnadmin',
   password: 'AVNS_LDkcNv993LfkzZNEvkR',
-  database: 'defaultdb',
+  database: 'defaultdb', 
   port: 23012,
   connectTimeout: 10000 // optional, but helpful
 });
