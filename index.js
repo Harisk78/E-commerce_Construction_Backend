@@ -13,10 +13,7 @@ const db = mysql.createConnection({
   user: 'avnadmin',
   password: 'AVNS_LDkcNv993LfkzZNEvkR',
   database: 'defaultdb',
-  port: 23012,
-  ssl: {
-    rejectUnauthorized: true
-  }
+  port: 23012
 });
 
 db.connect(err => {
