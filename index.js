@@ -95,7 +95,10 @@ app.delete('/products/:id', (req, res) => {
 app.get('/relatedproducts/:parentid', (req, res) => {
   const parentId = req.params.parentid;
   db.query(
-    'SELECT rp.*, p.name as parent_name FROM relatedproducts rp LEFT JOIN products p ON rp.parent_id = p.id WHERE rp.parent_id = ?',
+    `SELECT rp.*, p.name as parent_name 
+     FROM relatedproducts rp 
+     LEFT JOIN products p ON rp.product_id = p.id 
+     WHERE rp.product_id = ?`,
     [parentId],
     (err, results) => {
       if (err) return res.status(500).json({ error: err });
@@ -104,21 +107,33 @@ app.get('/relatedproducts/:parentid', (req, res) => {
   );
 });
 
+
+// Insert
 app.post('/relatedproducts', (req, res) => {
-  const { name, image, parent_id } = req.body;
-  db.query('INSERT INTO relatedproducts (name, image, parent_id) VALUES (?, ?, ?)', [name, image, parent_id], err => {
-    if (err) return res.status(500).json({ error: err });
-    res.json({ success: true });
-  });
+  const { name, image, product_id } = req.body;
+  db.query(
+    'INSERT INTO relatedproducts (name, image, product_id) VALUES (?, ?, ?)',
+    [name, image, product_id],
+    err => {
+      if (err) return res.status(500).json({ error: err });
+      res.json({ success: true });
+    }
+  );
 });
 
+// Update
 app.put('/relatedproducts/:id', (req, res) => {
-  const { name, image, parent_id } = req.body;
-  db.query('UPDATE relatedproducts SET name = ?, image = ?, parent_id = ? WHERE id = ?', [name, image, parent_id, req.params.id], err => {
-    if (err) return res.status(500).json({ error: err });
-    res.json({ success: true });
-  });
+  const { name, image, product_id } = req.body;
+  db.query(
+    'UPDATE relatedproducts SET name = ?, image = ?, product_id = ? WHERE id = ?',
+    [name, image, product_id, req.params.id],
+    err => {
+      if (err) return res.status(500).json({ error: err });
+      res.json({ success: true });
+    }
+  );
 });
+
 
 app.delete('/relatedproducts/:id', (req, res) => {
   db.query('DELETE FROM relatedproducts WHERE id = ?', [req.params.id], err => {
