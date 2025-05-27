@@ -99,7 +99,7 @@ app.delete('/products/:id', (req, res) => {
 });
 
 // ------------------ Related Products ------------------
-app.get('/relatedproducts/:parentid', (req, res) => {
+app.get('/relatedproducts/:productid', (req, res) => {
   const parentId = req.params.parentid;
   db.query(
     `SELECT rp.*, p.name as parent_name 
