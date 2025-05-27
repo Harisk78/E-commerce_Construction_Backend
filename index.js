@@ -64,9 +64,16 @@ app.post('/login', (req, res) => {
 app.get('/products', (req, res) => {
   db.query('SELECT * FROM products', (err, results) => {
     if (err) return res.status(500).json({ error: err });
-    res.json(results);
+
+    const updatedResults = results.map(row => ({
+      ...row,
+      imageUrl: row.image ? `data:image/jpeg;base64,${row.image.toString('base64')}` : '',
+    }));
+
+    res.json(updatedResults);
   });
 });
+
 
 app.post('/products', (req, res) => {
   const { name, image } = req.body;
@@ -102,10 +109,17 @@ app.get('/relatedproducts/:parentid', (req, res) => {
     [parentId],
     (err, results) => {
       if (err) return res.status(500).json({ error: err });
-      res.json(results);
+
+      const updatedResults = results.map(row => ({
+        ...row,
+        imageUrl: row.image ? `data:image/jpeg;base64,${row.image.toString('base64')}` : '',
+      }));
+
+      res.json(updatedResults);
     }
   );
 });
+
 
 
 // Insert
