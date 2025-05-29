@@ -100,7 +100,7 @@ app.delete('/products/:id', (req, res) => {
 
 // ------------------ Related Products ------------------
 app.get('/relatedproducts/:productid', (req, res) => {
-  const parentId = req.params.parentid;
+  const parentId = req.params.productid;
   db.query(
     `SELECT rp.*, p.name as parent_name 
      FROM relatedproducts rp 
@@ -109,6 +109,7 @@ app.get('/relatedproducts/:productid', (req, res) => {
     [parentId],
     (err, results) => {
       if (err) return res.status(500).json({ error: err });
+      // console.log('Fetched Related Products:', results);
 
       const updatedResults = results.map(row => ({
         ...row,
