@@ -26,6 +26,15 @@ db.connect(err => {
 });
 
 // ------------------ User Register/Login ------------------
+
+app.get('/users', (req, res) => {
+  db.query('SELECT * FROM user_details', (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results);
+  });
+});
+
+
 app.post('/register', (req, res) => {
   const { username, password, phone } = req.body;
   db.query(
