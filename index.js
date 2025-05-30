@@ -172,6 +172,31 @@ app.delete('/relatedproducts/:id', (req, res) => {
   });
 });
 
+//----------------user Request---------------------
+app.get('/requests', (req, res) => {
+  db.query('SELECT * FROM user_requests', (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results);
+  });
+});
+
+
+app.post('/requests', (req, res) => {
+  const { product, username, phone, quantity } = req.body;
+  db.query(
+    'INSERT INTO user_requests (product, username, phone, quantity) VALUES (?, ?, ?, ?)',
+    [product, username, phone, quantity],
+    (err, results) => {
+      if (err) {
+        console.error('Error inserting request:', err);
+        return res.status(500).json({ message: 'Failed to store request' });
+      }
+      res.status(200).json({ message: 'Request stored successfully' });
+    }
+  );
+});
+
+
 // ------------------ Cart ------------------
 app.post('/add-to-cart', (req, res) => {
   const { userId, productId, productName, quantity, image } = req.body;
