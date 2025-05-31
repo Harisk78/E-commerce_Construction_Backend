@@ -174,7 +174,7 @@ app.delete('/relatedproducts/:id', (req, res) => {
 
 //----------------user Request---------------------
 app.get('/requests', (req, res) => {
-  db.query('SELECT * FROM user_requests', (err, results) => {
+  db.query('SELECT * FROM user_request', (err, results) => {
     if (err) return res.status(500).json({ error: err });
     res.json(results);
   });
@@ -184,7 +184,7 @@ app.get('/requests', (req, res) => {
 app.post('/requests', (req, res) => {
   const { product, username, phone, quantity } = req.body;
   db.query(
-    'INSERT INTO user_requests (product, username, phone, quantity) VALUES (?, ?, ?, ?)',
+    'INSERT INTO user_request (product, username, phone, quantity) VALUES (?, ?, ?, ?)',
     [product, username, phone, quantity],
     (err, results) => {
       if (err) {
