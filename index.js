@@ -71,7 +71,7 @@ app.post('/login', (req, res) => {
         const user = results[0];
         return res.status(200).json({
           message: 'Login successful',
-          userId: user.id,
+          user_id: user.id,
           username: user.username,
           phone: user.phone,
         });
@@ -195,19 +195,23 @@ app.get('/requests', (req, res) => {
 
 
 app.post('/requests', (req, res) => {
-  const { product, username, phone, quantity } = req.body;
-  db.query(
-    'INSERT INTO user_request (user_id, username, phone, product, quantity) VALUES (?, ?, ?, ?, ?)',
-    [product, username, phone, quantity],
-    (err, results) => {
-      if (err) {
-        console.error('Error inserting request:', err);
-        return res.status(500).json({ message: 'Failed to store request' });
-      }
-      res.status(200).json({ message: 'Request stored successfully' });
+  const { user_id, username, phone, product, quantity } = req.body;
+
+  if (!user_id || !username || !phone || !product || !quantity) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
+  const sql = 'INSERT INTO user_request (user_id, username, phone, product, quantity) VALUES (?, ?, ?, ?, ?)';
+  db.query(sql, [user_id, username, phone, product, quantity], (err, results) => {
+    if (err) {
+      console.error('Error inserting request:', err);
+      return res.status(500).json({ message: 'Failed to store request' });
     }
-  );
+
+    res.status(200).json({ message: 'Request stored successfully' });
+  });
 });
+
 
 
 // ------------------ Cart ------------------
