@@ -84,26 +84,35 @@ app.post('/login', (req, res) => {
 
 // ------------------ Products ------------------
 app.get('/products', (req, res) => {
-  db.query('SELECT * FROM products', (err, results) => {
+  db.query('SELECT id, name, image FROM products', (err, results) => {
     if (err) return res.status(500).json({ error: err });
 
-    const updatedResults = results.map(row => ({
-      ...row,
-      imageUrl: row.image ? `data:image/jpeg;base64,${row.image.toString('base64')}` : '',
+    const products = results.map(row => ({
+      id: row.id,
+      name: row.name,
+      imageUrl: row.image
+        ? `data:image/jpeg;base64,${row.image.toString('base64')}`
+        : '',
     }));
 
-    res.json(updatedResults);
+    res.json(products);
   });
 });
 
 
-app.post('/products', (req, res) => {
+
+app.post('/products', upload.single('image'), (req, res) => {
   const { name, image } = req.body;
-  db.query('INSERT INTO products (name, image) VALUES (?, ?)', [name, image], err => {
+
+  // Decode base64 to buffer
+  const imageBuffer = Buffer.from(image, 'base64');
+
+  db.query('INSERT INTO products (name, image) VALUES (?, ?)', [name, imageBuffer], (err, result) => {
     if (err) return res.status(500).json({ error: err });
-    res.json({ success: true });
+    res.json({ message: 'Product added successfully' });
   });
 });
+
 
 app.put('/products/:id', (req, res) => {
   const { name, image } = req.body;
@@ -152,7 +161,7 @@ app.get('/relatedproducts', (req, res) => {
 
 
 // Insert
-app.post('/relatedproducts', (req, res) => {
+app.post('/relatedproducts/:productid', (req, res) => {
   const { name, image, product_id } = req.body;
   db.query(
     'INSERT INTO relatedproducts (name, image, product_id) VALUES (?, ?, ?)',
