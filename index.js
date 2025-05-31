@@ -34,6 +34,19 @@ app.get('/users', (req, res) => {
   });
 });
 
+app.get('/users/:id', (req, res) => {
+  const userId = req.params.id;
+  db.query(
+    'SELECT username, phone FROM user_details WHERE id = ?',
+    [userId],
+    (err, results) => {
+      if (err) return res.status(500).json({ error: err });
+      if (results.length === 0) return res.status(404).json({ error: 'User not found' });
+      res.json(results[0]);
+    }
+  );
+});
+
 
 app.post('/register', (req, res) => {
   const { username, password, phone } = req.body;
@@ -184,7 +197,7 @@ app.get('/requests', (req, res) => {
 app.post('/requests', (req, res) => {
   const { product, username, phone, quantity } = req.body;
   db.query(
-    'INSERT INTO user_request (product, username, phone, quantity) VALUES (?, ?, ?, ?)',
+    'INSERT INTO user_request (user_id, username, phone, product, quantity) VALUES (?, ?, ?, ?, ?)',
     [product, username, phone, quantity],
     (err, results) => {
       if (err) {
