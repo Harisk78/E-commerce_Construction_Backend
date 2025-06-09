@@ -2,8 +2,12 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
+const multer = require('multer');
 const app = express();
 const PORT = 5000;
+
+const storage = multer.memoryStorage(); // stores files in memory as Buffer
+const upload = multer({ storage: storage });
 
 app.use(cors());
 app.use(express.json());
