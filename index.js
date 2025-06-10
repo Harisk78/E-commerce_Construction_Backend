@@ -53,29 +53,33 @@ app.get('/users/:id', (req, res) => {
 
 // Add User
 app.post('/users', (req, res) => {
-  const { username, password, phone } = req.body;
+  const { username, phone } = req.body;
+
   db.query(
-    'INSERT INTO user_details (username, password, phone) VALUES (?, ?, ?)',
-    [username, password, phone],
-    err => {
+    'INSERT INTO user_details (username, phone) VALUES (?, ?)',
+    [username, phone],
+    (err) => {
       if (err) return res.status(500).json({ error: err });
       res.json({ success: true });
     }
   );
 });
 
+
 // Update User
 app.put('/users/:id', (req, res) => {
-  const { username, password, phone } = req.body;
+  const { username, phone } = req.body;
+
   db.query(
-    'UPDATE user_details SET username = ?, password = ?, phone = ? WHERE id = ?',
-    [username, password, phone, req.params.id],
-    err => {
+    'UPDATE user_details SET username = ?, phone = ? WHERE id = ?',
+    [username, phone, req.params.id],
+    (err) => {
       if (err) return res.status(500).json({ error: err });
       res.json({ success: true });
     }
   );
 });
+
 
 app.delete('/users/:id', (req, res) => {
   db.query('DELETE FROM user_details WHERE id = ?', [req.params.id], (err) => {
@@ -199,9 +203,12 @@ app.get('/relatedproducts', (req, res) => {
 // Insert
 app.post('/relatedproducts', (req, res) => {
   const { name, image, product_id } = req.body;
+
+  const imageBuffer = Buffer.from(image, 'base64');
+
   db.query(
     'INSERT INTO relatedproducts (name, image, product_id) VALUES (?, ?, ?)',
-    [name, image, product_id],
+    [name, imageBuffer, product_id],
     err => {
       if (err) return res.status(500).json({ error: err });
       res.json({ success: true });
