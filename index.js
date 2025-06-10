@@ -51,6 +51,32 @@ app.get('/users/:id', (req, res) => {
   );
 });
 
+// Add User
+app.post('/users', (req, res) => {
+  const { username, password, phone } = req.body;
+  db.query(
+    'INSERT INTO user_details (username, password, phone) VALUES (?, ?, ?)',
+    [username, password, phone],
+    err => {
+      if (err) return res.status(500).json({ error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
+// Update User
+app.put('/users/:id', (req, res) => {
+  const { username, password, phone } = req.body;
+  db.query(
+    'UPDATE user_details SET username = ?, password = ?, phone = ? WHERE id = ?',
+    [username, password, phone, req.params.id],
+    err => {
+      if (err) return res.status(500).json({ error: err });
+      res.json({ success: true });
+    }
+  );
+});
+
 app.delete('/users/:id', (req, res) => {
   db.query('DELETE FROM user_details WHERE id = ?', [req.params.id], (err) => {
     if (err) return res.status(500).json({ error: err });
@@ -171,7 +197,7 @@ app.get('/relatedproducts', (req, res) => {
 
 
 // Insert
-app.post('/relatedproducts/:productid', (req, res) => {
+app.post('/relatedproducts', (req, res) => {
   const { name, image, product_id } = req.body;
   db.query(
     'INSERT INTO relatedproducts (name, image, product_id) VALUES (?, ?, ?)',
@@ -182,6 +208,7 @@ app.post('/relatedproducts/:productid', (req, res) => {
     }
   );
 });
+
 
 // Update
 app.put('/relatedproducts/:id', (req, res) => {
