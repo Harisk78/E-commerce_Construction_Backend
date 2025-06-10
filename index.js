@@ -198,9 +198,16 @@ app.get('/relatedproducts/:productid', (req, res) => {
 app.get('/relatedproducts', (req, res) => {
   db.query('SELECT * FROM relatedproducts', (err, results) => {
     if (err) return res.status(500).json({ error: err });
-    res.json(results);
+
+    const updatedResults = results.map(row => ({
+      ...row,
+      imageUrl: row.image ? `data:image/jpeg;base64,${row.image.toString('base64')}` : '',
+    }));
+
+    res.json(updatedResults);
   });
 });
+
 
 
 // Insert
