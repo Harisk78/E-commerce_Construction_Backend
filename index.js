@@ -51,6 +51,12 @@ app.get('/users/:id', (req, res) => {
   );
 });
 
+app.delete('/users/:id', (req, res) => {
+  db.query('DELETE FROM user_details WHERE id = ?', [req.params.id], (err) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json({ message: 'User deleted successfully' });
+  });
+});
 
 app.post('/register', (req, res) => {
   const { username, password, phone } = req.body;
@@ -225,6 +231,19 @@ app.post('/requests', (req, res) => {
   });
 });
 
+app.delete('/requests/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = 'DELETE FROM user_request WHERE id = ?';
+
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error('Error deleting request:', err);
+      return res.status(500).json({ message: 'Failed to delete request' });
+    }
+
+    res.status(200).json({ message: 'Request deleted successfully' });
+  });
+});
 
 
 // ------------------ Cart ------------------
