@@ -156,7 +156,10 @@ app.post('/products', upload.single('image'), (req, res) => {
 
 app.put('/products/:id', (req, res) => {
   const { name, image } = req.body;
-  db.query('UPDATE products SET name = ?, image = ? WHERE id = ?', [name, image, req.params.id], err => {
+
+  const imageBuffer = image ? Buffer.from(image, 'base64') : null;
+
+  db.query('UPDATE products SET name = ?, image = ? WHERE id = ?', [name, imageBuffer, req.params.id], err => {
     if (err) return res.status(500).json({ error: err });
     res.json({ success: true });
   });
@@ -204,7 +207,7 @@ app.get('/relatedproducts', (req, res) => {
 app.post('/relatedproducts', (req, res) => {
   const { name, image, product_id } = req.body;
 
-  const imageBuffer = Buffer.from(image, 'base64');
+  const imageBuffer = image ? Buffer.from(image, 'base64') : null;
 
   db.query(
     'INSERT INTO relatedproducts (name, image, product_id) VALUES (?, ?, ?)',
@@ -220,15 +223,19 @@ app.post('/relatedproducts', (req, res) => {
 // Update
 app.put('/relatedproducts/:id', (req, res) => {
   const { name, image, product_id } = req.body;
+
+  const imageBuffer = image ? Buffer.from(image, 'base64') : null;
+
   db.query(
     'UPDATE relatedproducts SET name = ?, image = ?, product_id = ? WHERE id = ?',
-    [name, image, product_id, req.params.id],
+    [name, imageBuffer, product_id, req.params.id],
     err => {
       if (err) return res.status(500).json({ error: err });
       res.json({ success: true });
     }
   );
 });
+
 
 
 app.delete('/relatedproducts/:id', (req, res) => {
