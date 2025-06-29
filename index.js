@@ -1,4 +1,4 @@
-// ✅ Modified index.js for Aiven MySQL with working user register/login, products, relatedproducts, and cart endpoints
+// ✅ Modified index.js for Aiven MySQL with working user register/login, products, relatedproducts, and cart en clsdpoints
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
