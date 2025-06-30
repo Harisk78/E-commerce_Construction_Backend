@@ -53,11 +53,11 @@ app.get('/users/:id', (req, res) => {
 
 // Add User
 app.post('/users', (req, res) => {
-  const { username, phone } = req.body;
+  const { username,password, phone } = req.body;
 
   db.query(
-    'INSERT INTO user_details (username, phone) VALUES (?, ?)',
-    [username, phone],
+    'INSERT INTO user_details (username,password, phone) VALUES (?, ?, ?)',
+    [username,password, phone],
     (err) => {
       if (err) return res.status(500).json({ error: err });
       res.json({ success: true });
