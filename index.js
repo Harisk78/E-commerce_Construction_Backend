@@ -12,16 +12,14 @@ const upload = multer({ storage: storage });
 app.use(cors());
 app.use(express.json());
 
-const db = mysql.createPool({
-  connectionLimit: 10,
+const db = mysql.createConnection({
   host: 'mysql-2ebaaef9-ecommerce-construction-1.c.aivencloud.com',
   user: 'avnadmin',
   password: 'AVNS_LDkcNv993LfkzZNEvkR',
-  database: 'defaultdb',
+  database: 'defaultdb', 
   port: 23012,
-  connectTimeout: 10000
+  connectTimeout: 10000 // optional, but helpful
 });
-
 
 db.connect(err => {
   if (err) {
