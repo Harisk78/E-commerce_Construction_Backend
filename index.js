@@ -1,4 +1,3 @@
-// ✅ Modified index.js for Aiven MySQL with working user register/login, products, relatedproducts, and cart en clsdpoints
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -18,7 +17,7 @@ const db = mysql.createConnection({
   password: 'AVNS_LDkcNv993LfkzZNEvkR',
   database: 'defaultdb', 
   port: 23012,
-  connectTimeout: 10000 // optional, but helpful
+  connectTimeout: 10000 
 });
 
 db.connect(err => {
@@ -254,7 +253,7 @@ app.delete('/relatedproducts/:id', (req, res) => {
 
 //----------------user Request---------------------
 app.get('/requests', (req, res) => {
-  db.query('SELECT * FROM user_request', (err, results) => {
+  db.query('SELECT * FROM user_request ORDER BY id DESC', (err, results) => {
     if (err) return res.status(500).json({ error: err });
     res.json(results);
   });
@@ -337,7 +336,4 @@ app.delete('/cart/:userId/:productId', (req, res) => {
   });
 });
 
-// ------------------ Start Server ------------------
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-});
+module.exports = app;
